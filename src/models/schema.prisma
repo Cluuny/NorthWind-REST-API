@@ -1,0 +1,88 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DB_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model categories {
+    CategoryID   Int        @id @default(autoincrement())
+    CategoryName String     @db.VarChar(25)
+    Description  String     @db.VarChar(25)
+    products     products[]
+}
+
+model customers {
+    CustomerID       Int      @id @default(autoincrement())
+    CustomerName     String   @db.VarChar(50)
+    ContactName      String   @db.VarChar(50)
+    CustomerPassword String   @db.VarChar(50)
+    Address          String   @db.VarChar(50)
+    City             String   @db.VarChar(20)
+    PostalCode       String   @db.VarChar(10)
+    Country          String   @db.VarChar(15)
+    orders           orders[]
+}
+
+model employees {
+    EmployeeID Int      @id @default(autoincrement())
+    LastName   String   @db.VarChar(15)
+    FirstName  String   @db.VarChar(15)
+    BirthDate  DateTime
+    Photo      String   @db.VarChar(25)
+    Notes      String   @db.VarChar(1024)
+    orders     orders[]
+}
+
+model shippers {
+    ShipperID   Int      @id @default(autoincrement())
+    ShipperName String   @db.VarChar(25)
+    Phone       String   @db.VarChar(15)
+    orders      orders[]
+}
+
+model suppliers {
+    SupplierID   Int        @id @default(autoincrement())
+    SupplierName String     @db.VarChar(50)
+    ContactName  String     @db.VarChar(50)
+    Address      String     @db.VarChar(50)
+    City         String     @db.VarChar(20)
+    PostalCode   String     @db.VarChar(10)
+    Country      String     @db.VarChar(15)
+    products     products[]
+}
+
+model orders {
+    OrderID      Int            @id @default(autoincrement())
+    CustomerID   Int
+    EmployeeID   Int
+    OrderDate    DateTime
+    ShipperID    Int
+    Customer     customers      @relation(fields: [CustomerID], references: [CustomerID])
+    Employee     employees      @relation(fields: [EmployeeID], references: [EmployeeID])
+    Shipper      shippers       @relation(fields: [ShipperID], references: [ShipperID])
+    orderdetails orderdetails[]
+}
+
+model products {
+    ProductID    Int            @id @default(autoincrement())
+    ProductName  String         @unique @db.VarChar(50)
+    SupplierID   Int
+    CategoryID   Int
+    Unit         String         @db.VarChar(25)
+    Price        Decimal        @db.Decimal(10, 0)
+    Supplier     suppliers      @relation(fields: [SupplierID], references: [SupplierID])
+    Category     categories     @relation(fields: [CategoryID], references: [CategoryID])
+    orderdetails orderdetails[]
+}
+
+model orderdetails {
+    OrderDetailID Int      @id @default(autoincrement())
+    OrderID       Int
+    ProductID     Int
+    Quantity      Int
+    Order         orders   @relation(fields: [OrderID], references: [OrderID])
+    Product       products @relation(fields: [ProductID], references: [ProductID])
+}
