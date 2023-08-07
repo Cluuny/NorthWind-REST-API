@@ -1,10 +1,13 @@
 import { PrismaClient } from "@prisma/client";
+import { decryptMany } from "../utils/decrypt.js";
 const prisma = new PrismaClient();
 export const getEmployees = async (req, res) => {
     try {
         let getEmployeesQuery;
+        let decryptEmployeesQuery;
         if (Object.keys(req.query).length === 0) {
             getEmployeesQuery = await prisma.employees.findMany();
+            decryptEmployeesQuery = decryptMany(getEmployeesQuery);
         } else {
             const { id } = req.query;
             getEmployeesQuery = await prisma.employees.findUnique({
@@ -12,8 +15,9 @@ export const getEmployees = async (req, res) => {
                     EmployeeID: parseInt(id)
                 }
             })
+            decryptEmployeesQuery = decryptMany([getEmployeesQuery]);
         }
-        res.status(200).json(getEmployeesQuery);
+        res.status(200).json(decryptEmployeesQuery);
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message })
     }

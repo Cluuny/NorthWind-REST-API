@@ -1,17 +1,21 @@
 import { PrismaClient } from "@prisma/client"
+import { decryptMany } from "../utils/decrypt.js"
 const prisma = new PrismaClient()
 export const getCustomers = async (req, res) => {
     try {
         let getCustomersQuery
+        let decryptCustomersQuery
         if (Object.keys(req.query).length === 0) {
             getCustomersQuery = await prisma.customers.findMany()
+            decryptCustomersQuery = decryptMany(getCustomersQuery)
         } else {
             const { id } = req.query
             resultQuery = await prisma.customers.findUnique({
                 where: { CustomerID: parseInt(id) }
             })
+            decryptCustomersQuery = decryptMany([resultQuery])
         }
-        res.status(200).json(getCustomersQuery)
+        res.status(200).json(decryptCustomersQuery)
     } catch (error) {
         res.status(500).json({ message: "Error" })
     }

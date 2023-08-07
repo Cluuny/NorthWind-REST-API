@@ -1,15 +1,10 @@
 import { PrismaClient } from "@prisma/client"
+import { decryptMany } from "../utils/decrypt.js"
 const prisma = new PrismaClient()
 
-// for (const order of OrdersQuery[0]) {
-//     order.orderDetails = []
-//     const orderDetailsQuery = await poolDB.query('SELECT OrderDetailID, ProductID, Quantity FROM orderdetails WHERE OrderID = ? ', [order.OrderID])
-//     for (const orderDetail of orderDetailsQuery[0]) {
-//         order.orderDetails.push(orderDetail)
-//     }
-// }
 export const getOrders = async (req, res) => {
     try {
+        let decryptedOrdersQuery
         const { CustomerID } = req.body
         const OrdersQuery = await prisma.orders.findMany({
             where: { CustomerID: parseInt(CustomerID) },
@@ -35,7 +30,8 @@ export const getOrders = async (req, res) => {
                 }
             },
         })
-        res.status(200).json(OrdersQuery)
+        decryptedOrdersQuery = decryptMany(OrdersQuery)
+        res.status(200).json(decryptedOrdersQuery)
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message })
     }

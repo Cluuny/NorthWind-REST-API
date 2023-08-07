@@ -7,3 +7,4 @@ export const DB_PASSWORD = process.env.DB_PASSWORD
 export const DB_NAME = process.env.DB_NAME
 export const DB_URL = process.env.DB_URL
 export const JWT_KEY = process.env.JWT_KEY
+export const AES_KEY = process.env.AES_KEY

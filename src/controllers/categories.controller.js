@@ -1,18 +1,22 @@
 import { PrismaClient } from "@prisma/client";
+import { decryptMany } from "../utils/decrypt.js";
 const prisma = new PrismaClient();
 export const getCategory = async (req, res) => {
     try {
         let categoriesQuery
+        let decryptedCategoriesQuery
         if (Object.keys(req.query).length === 0) {
             categoriesQuery = await prisma.categories.findMany();
+            decryptedCategoriesQuery = decryptMany(categoriesQuery);
         }
         else {
             const { id } = req.query;
             categoriesQuery = await prisma.categories.findUnique({
                 where: { CategoryID: parseInt(id) }
             })
+            decryptedCategoriesQuery = decryptMany([categoriesQuery]);
         }
-        res.status(200).json(categoriesQuery);
+        res.status(200).json(decryptedCategoriesQuery);
     } catch (error) {
         res.status(500).json({ message: "Error", error: error.message })
     }

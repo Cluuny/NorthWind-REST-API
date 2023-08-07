@@ -9,48 +9,49 @@ generator client {
 
 model categories {
     CategoryID   Int        @id @default(autoincrement())
-    CategoryName String     @db.VarChar(25)
-    Description  String     @db.VarChar(25)
+    CategoryName String     @db.VarChar(50)
+    Description  String     @db.VarChar(255)
     products     products[]
 }
 
 model customers {
     CustomerID       Int      @id @default(autoincrement())
-    CustomerName     String   @db.VarChar(50)
-    ContactName      String   @db.VarChar(50)
-    CustomerPassword String   @db.VarChar(50)
-    Address          String   @db.VarChar(50)
-    City             String   @db.VarChar(20)
-    PostalCode       String   @db.VarChar(10)
-    Country          String   @db.VarChar(15)
+    CustomerName     String   @db.VarChar(255)
+    ContactName      String   @db.VarChar(255)
+    CustomerPassword String   @db.VarChar(255)
+    Address          String   @db.VarChar(255)
+    City             String   @db.VarChar(255)
+    PostalCode       String   @db.VarChar(255)
+    Country          String   @db.VarChar(255)
     orders           orders[]
 }
 
 model employees {
     EmployeeID Int      @id @default(autoincrement())
-    LastName   String   @db.VarChar(15)
-    FirstName  String   @db.VarChar(15)
+    LastName   String   @db.VarChar(255)
+    FirstName  String   @db.VarChar(255)
     BirthDate  DateTime
-    Photo      String   @db.VarChar(25)
+    Photo      String   @db.VarChar(255)
     Notes      String   @db.VarChar(1024)
     orders     orders[]
 }
 
 model shippers {
     ShipperID   Int      @id @default(autoincrement())
-    ShipperName String   @db.VarChar(25)
-    Phone       String   @db.VarChar(15)
+    ShipperName String   @db.VarChar(255)
+    Phone       String   @db.VarChar(255)
     orders      orders[]
 }
 
 model suppliers {
     SupplierID   Int        @id @default(autoincrement())
-    SupplierName String     @db.VarChar(50)
-    ContactName  String     @db.VarChar(50)
-    Address      String     @db.VarChar(50)
-    City         String     @db.VarChar(20)
-    PostalCode   String     @db.VarChar(10)
-    Country      String     @db.VarChar(15)
+    SupplierName String     @db.VarChar(255)
+    ContactName  String     @db.VarChar(255)
+    Address      String     @db.VarChar(255)
+    City         String     @db.VarChar(255)
+    PostalCode   String     @db.VarChar(255)
+    Country      String     @db.VarChar(255)
+    Phone        String     @db.VarChar(255)
     products     products[]
 }
 
@@ -68,10 +69,10 @@ model orders {
 
 model products {
     ProductID    Int            @id @default(autoincrement())
-    ProductName  String         @unique @db.VarChar(50)
+    ProductName  String         @unique @db.VarChar(255)
     SupplierID   Int
     CategoryID   Int
-    Unit         String         @db.VarChar(25)
+    Unit         String         @db.VarChar(255)
     Price        Decimal        @db.Decimal(10, 0)
     Supplier     suppliers      @relation(fields: [SupplierID], references: [SupplierID])
     Category     categories     @relation(fields: [CategoryID], references: [CategoryID])
@@ -82,7 +83,7 @@ model orderdetails {
     OrderDetailID Int      @id @default(autoincrement())
     OrderID       Int
     ProductID     Int
-    Quantity      Int
+    Quantity      String   @db.VarChar(255)
     Order         orders   @relation(fields: [OrderID], references: [OrderID])
     Product       products @relation(fields: [ProductID], references: [ProductID])
 }
