@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { decryptMany } from "../utils/decrypt.js"
+import { decryptMany, encryptMany } from "../utils/cryptoData.js"
 const prisma = new PrismaClient()
 export const getCustomers = async (req, res) => {
     try {
@@ -10,75 +10,87 @@ export const getCustomers = async (req, res) => {
             decryptCustomersQuery = decryptMany(getCustomersQuery)
         } else {
             const { id } = req.query
-            resultQuery = await prisma.customers.findUnique({
+            getCustomersQuery = await prisma.customers.findUnique({
                 where: { CustomerID: parseInt(id) }
             })
-            decryptCustomersQuery = decryptMany([resultQuery])
+            decryptCustomersQuery = decryptMany([getCustomersQuery])
         }
         res.status(200).json(decryptCustomersQuery)
     } catch (error) {
-        res.status(500).json({ message: "Error" })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 
 }
 export const createCustomer = async (req, res) => {
     try {
         const { CustomerName, ContactName, CustomerPassword, Address, City, PostalCode, Country } = req.body
-        let createCustomerQuery = await prisma.customers.create({
-            data: {
-                CustomerName,
-                ContactName,
-                CustomerPassword,
-                Address,
-                City,
-                PostalCode,
-                Country
-            }
+        const encryptCustomerData = encryptMany([{
+            CustomerName,
+            ContactName,
+            CustomerPassword,
+            Address,
+            City,
+            PostalCode,
+            Country
+        }])
+        const createCustomerQuery = await prisma.customers.create({
+            data: encryptCustomerData[0]
         })
-        res.status(200).json({
-            message: "Customer created",
-            customer: createCustomerQuery
+        res.json({
+            CustomerID: createCustomerQuery.CustomerID
         })
     } catch (error) {
-        res.status(500).json({ message: "Missing required data" })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteCustomer = async (req, res) => {
     try {
         const { id } = req.query
-        const deleteCustomerQuery = await prisma.customers.delete({
+        await prisma.customers.delete({
             where: { CustomerID: parseInt(id) }
         })
-        res.status(200).json({
-            message: "Customer deleted",
-            customer: deleteCustomerQuery
-        })
-
+        res.sendStatus(204)
     } catch (error) {
-        res.status(500).json({ message: "Missing required data" })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const updateCustomer = async (req, res) => {
     try {
         const { id } = req.query
         const { CustomerName, ContactName, CustomerPassword, Address, City, PostalCode, Country } = req.body
-        const updateCustomerQuery = await prisma.customers.update({
+        const encryptCustomerData = encryptMany([{
+            CustomerName,
+            ContactName,
+            CustomerPassword,
+            Address,
+            City,
+            PostalCode,
+            Country
+        }])
+        await prisma.customers.update({
             where: { CustomerID: parseInt(id) },
-            data: {
-                CustomerName,
-                ContactName,
-                CustomerPassword,
-                Address,
-                City,
-                PostalCode,
-                Country
-            }
+            data: encryptCustomerData[0]
         })
-        res.status(200).json({
-            message: "Customer updated",
-            customer: updateCustomerQuery
+        res.json({
+            updated: true
         })
     } catch (error) {
-        res.status(500).json({ message: "Missing required data" })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }

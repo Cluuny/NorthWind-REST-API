@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany } from "../utils/decrypt.js";
+import { decryptMany, encryptMany } from "../utils/cryptoData.js";
 const prisma = new PrismaClient();
 export const getShippers = async (req, res) => {
     try {
@@ -19,63 +19,73 @@ export const getShippers = async (req, res) => {
         }
         res.status(200).json(decryptedShippersQuery)
     } catch (error) {
-        res.status(500).json({
-            message: "Error",
-            error: error.message
-        })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const createShipper = async (req, res) => {
     try {
         const { ShipperName, Phone } = req.body
+        const encryptedShipperData = encryptMany([{
+            ShipperName,
+            Phone
+        }])
         const createShipperQuery = await prisma.shippers.create({
-            data: {
-                ShipperName,
-                Phone
-            }
+            data: encryptedShipperData[0]
         })
-        res.status(200).json(createShipperQuery)
+        res.json({
+            ShipperID: createShipperQuery.ShipperID
+        })
     } catch (error) {
-        res.status(500).json({
-            message: "Error",
-            error: error.message
-        })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteShipper = async (req, res) => {
     try {
         const { id } = req.query
-        const deleteShipperQuery = await prisma.shippers.delete({
+        await prisma.shippers.delete({
             where: {
                 ShipperID: parseInt(id)
             }
         })
-        res.status(200).json(deleteShipperQuery)
+        res.sendStatus(204)
     } catch (error) {
-        res.status(500).json({
-            message: "Error",
-            error: error.message
-        })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const updateShipper = async (req, res) => {
     try {
         const { id } = req.query
         const { ShipperName, Phone } = req.body
-        const updateShipperQuery = await prisma.shippers.update({
+        const encryptedShipperData = encryptMany([{
+            ShipperName,
+            Phone
+        }])
+        await prisma.shippers.update({
             where: {
                 ShipperID: parseInt(id)
             },
-            data: {
-                ShipperName,
-                Phone
-            }
+            data: encryptedShipperData[0]
         })
-        res.status(200).json(updateShipperQuery)
+        res.json({
+            updated: true
+        })
     } catch (error) {
-        res.status(500).json({
-            message: "Error",
-            error: error.message
-        })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }

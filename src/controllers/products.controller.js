@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany } from "../utils/decrypt.js";
+import { decryptMany, encryptMany } from "../utils/cryptoData.js";
 const prisma = new PrismaClient();
 export const getProducts = async (req, res) => {
     try {
@@ -19,70 +19,79 @@ export const getProducts = async (req, res) => {
         }
         res.status(200).json(decryptedProductsQuery)
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const createProduct = async (req, res) => {
     try {
         const { ProductName, SupplierID, CategoryID, Unit, Price } = req.body
+        const encryptedProductData = encryptMany([{
+            ProductName,
+            SupplierID,
+            CategoryID,
+            Unit,
+            Price
+        }])
         const createProductQuery = await prisma.products.create({
-            data: {
-                ProductName,
-                SupplierID,
-                CategoryID,
-                Unit,
-                Price
-            }
+            data: encryptedProductData[0]
         })
-        res.status(200).json({
-            message: "Product created",
-            product: createProductQuery
+        res.json({
+            ProductID: createProductQuery.ProductID
         })
     } catch (error) {
-        res.status(500).json({ alert: "Error", message: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteProduct = async (req, res) => {
     try {
         const { id } = req.query
-        const deleteProductQuery = await prisma.products.delete({
+        await prisma.products.delete({
             where: {
                 ProductID: parseInt(id)
             }
         })
-        res.send(200).json({
-            message: "Product deleted",
-            product: deleteProductQuery
-        })
+        res.sendStatus(204)
     } catch (error) {
-        res.status(500).json({ alert: "Error", message: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.query
         const { ProductName, SupplierID, CategoryID, Unit, Price } = req.body
-        const updateProductQuery = await prisma.products.update({
+        const encryptedProductData = encryptMany([{
+            ProductName,
+            SupplierID,
+            CategoryID,
+            Unit,
+            Price
+        }])
+        await prisma.products.update({
             where: {
                 ProductID: parseInt(id)
             },
-            data: {
-                ProductName,
-                SupplierID,
-                CategoryID,
-                Unit,
-                Price
-            }
+            data: encryptedProductData[0]
         })
-        res.send(200).json({
-            message: "Product updated",
-            product: updateProductQuery
+        res.json({
+            updated: true
         })
     } catch (error) {
-        res.status(500).send({
-            alert: "Error",
-            message: error.message
-        })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
-
 }

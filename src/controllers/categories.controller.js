@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany } from "../utils/decrypt.js";
+import { decryptMany, encryptMany } from "../utils/cryptoData.js";
 const prisma = new PrismaClient();
 export const getCategory = async (req, res) => {
     try {
@@ -18,38 +18,47 @@ export const getCategory = async (req, res) => {
         }
         res.status(200).json(decryptedCategoriesQuery);
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 };
 export const createCategory = async (req, res) => {
     try {
         const { CategoryName, Description } = req.body;
+        const encryptedData = encryptMany([{
+            CategoryName,
+            Description
+        }]);
         const createCategoryQuery = await prisma.categories.create({
-            data: {
-                CategoryName,
-                Description
-            }
+            data: encryptedData[0]
         })
-        res.status(200).json({
-            message: "Category created",
-            category: createCategoryQuery
-        });
+        res.json({
+            CategoryID: createCategoryQuery.CategoryID
+        })
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 };
 export const deleteCategory = async (req, res) => {
     try {
         const { id } = req.query;
-        const deleteCategoryQuery = await prisma.categories.delete({
+        await prisma.categories.delete({
             where: { CategoryID: parseInt(id) }
         })
-        res.status(200).json({
-            message: "Category deleted",
-            category: deleteCategoryQuery
-        });
+        res.sendStatus(204)
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 
 };
@@ -57,18 +66,22 @@ export const updateCategory = async (req, res) => {
     try {
         const { id } = req.query;
         const { CategoryName, Description } = req.body;
-        const updateCategoryQuery = await prisma.categories.update({
+        const encryptedData = encryptMany([{
+            CategoryName,
+            Description
+        }]);
+        await prisma.categories.update({
             where: { CategoryID: parseInt(id) },
-            data: {
-                CategoryName,
-                Description
-            }
+            data: encryptedData[0]
         })
-        res.status(200).json({
-            message: "Category updated",
-            category: updateCategoryQuery
-        });
+        res.json({
+            updated: true
+        })
     } catch (error) {
-        res.status(500).json({ message: "Error", error: error.message })
+        if (error instanceof TypeError) {
+            res.status(404).json({ message: "Not Found", error: error.message })
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 };
