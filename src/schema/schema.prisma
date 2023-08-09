@@ -1,4 +1,4 @@
-datasource db {
+datasource NorthwindAPIDB {
     provider = "mysql"
     url      = env("DB_URL")
 }
@@ -9,30 +9,30 @@ generator client {
 
 model categories {
     CategoryID   Int        @id @unique @default(autoincrement())
-    CategoryName String     @unique @db.VarChar(50)
-    Description  String     @db.VarChar(255)
+    CategoryName String     @unique @NorthwindAPIDB.VarChar(50)
+    Description  String     @NorthwindAPIDB.VarChar(255)
     products     products[]
 }
 
 model customers {
     CustomerID       Int      @id @unique @default(autoincrement())
-    CustomerName     String   @db.VarChar(255)
-    ContactName      String   @db.VarChar(255)
-    CustomerPassword String   @db.VarChar(255)
-    Address          String   @unique @db.VarChar(255)
-    City             String   @db.VarChar(255)
-    PostalCode       String   @db.VarChar(255)
-    Country          String   @db.VarChar(255)
+    CustomerName     String   @NorthwindAPIDB.VarChar(255)
+    ContactName      String   @NorthwindAPIDB.VarChar(255)
+    CustomerPassword String   @NorthwindAPIDB.VarChar(255)
+    Address          String   @unique @NorthwindAPIDB.VarChar(255)
+    City             String   @NorthwindAPIDB.VarChar(255)
+    PostalCode       String   @NorthwindAPIDB.VarChar(255)
+    Country          String   @NorthwindAPIDB.VarChar(255)
     orders           orders[]
 }
 
 model employees {
     EmployeeID Int      @id @unique @default(autoincrement())
-    LastName   String   @db.VarChar(255)
-    FirstName  String   @db.VarChar(255)
-    BirthDate  String   @db.VarChar(255)
-    Photo      String   @db.VarChar(255)
-    Notes      String   @db.VarChar(1024)
+    LastName   String   @NorthwindAPIDB.VarChar(255)
+    FirstName  String   @NorthwindAPIDB.VarChar(255)
+    BirthDate  String   @NorthwindAPIDB.VarChar(255)
+    Photo      String   @NorthwindAPIDB.VarChar(255)
+    Notes      String   @NorthwindAPIDB.VarChar(1024)
     orders     orders[]
 
     @@unique(fields: [FirstName, LastName])
@@ -40,20 +40,20 @@ model employees {
 
 model shippers {
     ShipperID   Int      @id @unique @default(autoincrement())
-    ShipperName String   @unique @db.VarChar(255)
-    Phone       String   @unique @db.VarChar(255)
+    ShipperName String   @unique @NorthwindAPIDB.VarChar(255)
+    Phone       String   @unique @NorthwindAPIDB.VarChar(255)
     orders      orders[]
 }
 
 model suppliers {
     SupplierID   Int        @id @unique @default(autoincrement())
-    SupplierName String     @unique @db.VarChar(255)
-    ContactName  String     @db.VarChar(255)
-    Address      String     @db.VarChar(255)
-    City         String     @db.VarChar(255)
-    PostalCode   String     @db.VarChar(255)
-    Country      String     @db.VarChar(255)
-    Phone        String     @unique @db.VarChar(255)
+    SupplierName String     @unique @NorthwindAPIDB.VarChar(255)
+    ContactName  String     @NorthwindAPIDB.VarChar(255)
+    Address      String     @NorthwindAPIDB.VarChar(255)
+    City         String     @NorthwindAPIDB.VarChar(255)
+    PostalCode   String     @NorthwindAPIDB.VarChar(255)
+    Country      String     @NorthwindAPIDB.VarChar(255)
+    Phone        String     @unique @NorthwindAPIDB.VarChar(255)
     products     products[]
 }
 
@@ -61,7 +61,7 @@ model orders {
     OrderID      Int            @id @unique @default(autoincrement())
     CustomerID   Int
     EmployeeID   Int
-    OrderDate    String         @db.VarChar(255)
+    OrderDate    String         @NorthwindAPIDB.VarChar(255)
     ShipperID    Int
     Customer     customers      @relation(fields: [CustomerID], references: [CustomerID])
     Employee     employees      @relation(fields: [EmployeeID], references: [EmployeeID])
@@ -71,11 +71,11 @@ model orders {
 
 model products {
     ProductID    Int            @id @unique @default(autoincrement())
-    ProductName  String         @unique @db.VarChar(255)
+    ProductName  String         @unique @NorthwindAPIDB.VarChar(255)
     SupplierID   Int
     CategoryID   Int
-    Unit         String         @db.VarChar(255)
-    Price        Decimal        @db.Decimal(10, 0)
+    Unit         String         @NorthwindAPIDB.VarChar(255)
+    Price        Decimal        @NorthwindAPIDB.Decimal(10, 0)
     Supplier     suppliers      @relation(fields: [SupplierID], references: [SupplierID])
     Category     categories     @relation(fields: [CategoryID], references: [CategoryID])
     orderdetails orderdetails[]
@@ -85,7 +85,7 @@ model orderdetails {
     OrderDetailID Int      @id @unique @default(autoincrement())
     OrderID       Int
     ProductID     Int
-    Quantity      String   @db.VarChar(255)
+    Quantity      String   @NorthwindAPIDB.VarChar(255)
     Order         orders   @relation(fields: [OrderID], references: [OrderID])
     Product       products @relation(fields: [ProductID], references: [ProductID])
 }
