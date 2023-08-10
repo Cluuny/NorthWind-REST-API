@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { decryptMany, encryptMany } from "../utils/cryptoData.js";
 const prisma = new PrismaClient();
 export const getCategory = async (req, res) => {
@@ -41,6 +41,8 @@ export const createCategory = async (req, res) => {
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
+        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
+            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
@@ -56,6 +58,8 @@ export const deleteCategory = async (req, res) => {
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
+        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
+            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
@@ -80,6 +84,8 @@ export const updateCategory = async (req, res) => {
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
+        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
+            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }

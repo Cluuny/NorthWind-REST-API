@@ -3,8 +3,8 @@ import { createProduct, deleteProduct, getProducts, updateProduct } from "../con
 const productsRouter = Router()
 
 productsRouter.get("/", getProducts)
-// productsRouter.post("/", createProduct)
-// productsRouter.delete("/", deleteProduct)
-// productsRouter.patch("/", updateProduct)
+productsRouter.post("/", createProduct)
+productsRouter.delete("/", deleteProduct)
+productsRouter.patch("/", updateProduct)
 
 export default productsRouter

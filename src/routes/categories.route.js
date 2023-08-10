@@ -3,8 +3,8 @@ import { createCategory, deleteCategory, getCategory, updateCategory } from "../
 
 const categoriesRouter = Router();
 categoriesRouter.get("/", getCategory)
-// categoriesRouter.post("/", createCategory)
-// categoriesRouter.delete("/", deleteCategory)
-// categoriesRouter.patch("/", updateCategory)
+categoriesRouter.post("/", createCategory)
+categoriesRouter.delete("/", deleteCategory)
+categoriesRouter.patch("/", updateCategory)
 
 export default categoriesRouter;

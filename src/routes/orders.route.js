@@ -4,7 +4,7 @@ import { createOrder, deleteOrder, getOrders } from "../controllers/orders.contr
 const ordersRouter = Router();
 
 ordersRouter.get("/", getOrders)
-// ordersRouter.post("/", createOrder)
-// ordersRouter.delete("/", deleteOrder)
+ordersRouter.post("/", createOrder)
+ordersRouter.delete("/", deleteOrder)
 
 export default ordersRouter;

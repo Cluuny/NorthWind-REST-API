@@ -3,8 +3,8 @@ import { createEmployee, deleteEmployee, getEmployees, updateEmployee } from "..
 
 const employeesRouter = Router();
 employeesRouter.get("/", getEmployees)
-// employeesRouter.post("/", createEmployee)
-// employeesRouter.delete("/", deleteEmployee)
-// employeesRouter.patch("/", updateEmployee)
+employeesRouter.post("/", createEmployee)
+employeesRouter.delete("/", deleteEmployee)
+employeesRouter.patch("/", updateEmployee)
 
 export default employeesRouter;

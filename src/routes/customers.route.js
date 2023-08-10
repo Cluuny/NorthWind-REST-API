@@ -3,8 +3,8 @@ import { createCustomer, deleteCustomer, getCustomers, updateCustomer } from "..
 
 const customersRouter = Router();
 customersRouter.get("/", getCustomers)
-// customersRouter.post("/", createCustomer)
-// customersRouter.delete("/", deleteCustomer)
-// customersRouter.patch("/", updateCustomer)
+customersRouter.post("/", createCustomer)
+customersRouter.delete("/", deleteCustomer)
+customersRouter.patch("/", updateCustomer)
 
 export default customersRouter
