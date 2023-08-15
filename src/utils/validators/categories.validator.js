@@ -16,16 +16,15 @@ export const validateCreateRequestBody = [
         .trim()
         .withMessage('A Category must have a description.'),
     (req, res, next) => {
-        const result = validationResult(req)
-        const hasErrors = !result.isEmpty()
-        const errors = result.errors
-        req.body = matchedData(req)
+        const errors = validationResult(req)
+        const hasErrors = !errors.isEmpty()
         if (hasErrors) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message: "Bad request",
-                errors: errors
+                errors: errors.array()
             })
         }
+        req.body = matchedData(req)
         return next()
     }
 ]
@@ -53,7 +52,7 @@ export const validateUpdateRequestBody = [
         const errors = result.errors
         req.body = matchedData(req)
         if (hasErrors) {
-            return res.status(403).json({
+            return res.status(400).json({
                 message: "Bad request",
                 errors: errors
             })

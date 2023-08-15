@@ -40,7 +40,7 @@ export const createCustomer = async (req, res) => {
         const createCustomerQuery = await prisma.customers.create({
             data: encryptCustomerData[0]
         })
-        res.json({
+        res.status(201).json({
             CustomerID: createCustomerQuery.CustomerID
         })
     } catch (error) {
@@ -87,9 +87,7 @@ export const updateCustomer = async (req, res) => {
             where: { CustomerID: parseInt(id) },
             data: encryptCustomerData[0]
         })
-        res.json({
-            updated: true
-        })
+        res.sendStatus(204)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
