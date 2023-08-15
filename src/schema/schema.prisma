@@ -1,6 +1,6 @@
 datasource NorthwindAPIDB {
     provider = "mysql"
-    url      = env("DB_URL")
+    url      = env("DB_ROOT_URL")
 }
 
 generator client {

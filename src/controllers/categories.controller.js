@@ -35,7 +35,7 @@ export const createCategory = async (req, res) => {
         const createCategoryQuery = await prisma.categories.create({
             data: encryptedData[0]
         })
-        res.json({
+        res.status(201).json({
             CategoryID: createCategoryQuery.CategoryID
         })
     } catch (error) {
@@ -78,9 +78,7 @@ export const updateCategory = async (req, res) => {
             where: { CategoryID: parseInt(id) },
             data: encryptedData[0]
         })
-        res.json({
-            updated: true
-        })
+        res.sendStatus(204)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
