@@ -41,7 +41,7 @@ export const createEmployee = async (req, res) => {
         const createEmployeeQuery = await prisma.employees.create({
             data: encryptEmployeeData[0]
         })
-        res.json({
+        res.status(201).json({
             EmployeeID: createEmployeeQuery.EmployeeID
         })
     } catch (error) {
@@ -88,9 +88,7 @@ export const updateEmployee = async (req, res) => {
             where: { EmployeeID: parseInt(id) },
             data: encryptEmployeeData[0]
         })
-        res.json({
-            updated: true
-        })
+        res.sendStatus(204)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })

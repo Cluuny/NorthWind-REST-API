@@ -37,14 +37,14 @@ export const validateUpdateRequestBody = [
             .notEmpty()
             .escape()
             .trim()
-            .withMessage('A Category must have a name.'),
+            .withMessage('A Category must have a value'),
         body('Description')
             .optional()
             .isString()
             .notEmpty()
             .escape()
             .trim()
-            .withMessage('A Category must have a description.'),
+            .withMessage('A Category must have a value'),
     ],
     (req, res, next) => {
         const result = validationResult(req)

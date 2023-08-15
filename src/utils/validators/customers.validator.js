@@ -70,49 +70,49 @@ export const validateUpdateRequestbody = [
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('CustomerName is required'),
+        .withMessage('CustomerName must have a value'),
     body('ContactName')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('ContactName is required'),
+        .withMessage('ContactName must have a value'),
     body('CustomerPassword')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('CustomerPassword is required'),
+        .withMessage('CustomerPassword must have a value'),
     body('Address')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('Address is required'),
+        .withMessage('Address must have a value'),
     body('City')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('City is required'),
+        .withMessage('City must have a value'),
     body('PostalCode')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('PostalCode is required'),
+        .withMessage('PostalCode must have a value'),
     body('Country')
         .optional()
         .isString()
         .notEmpty()
         .escape()
         .trim()
-        .withMessage('PostalCode is required'),
+        .withMessage('PostalCode must have a value'),
     (req, res, next) => {
         const errors = validationResult(req)
         const hasErrors = !errors.isEmpty()
