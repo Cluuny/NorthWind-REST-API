@@ -1,42 +1,44 @@
-import { body, validationResult, matchedData } from "express-validator";
+import { check, validationResult, matchedData } from "express-validator";
 
 export const validateCreateRequestbody = [
-    body('CustomerID')
+    check('CustomerID')
         .exists()
         .isNumeric()
         .notEmpty()
         .escape()
         .withMessage('CustomerID is required'),
-    body('EmployeeID')
+    check('EmployeeID')
         .exists()
         .isNumeric()
         .notEmpty()
         .escape()
         .withMessage('EmployeeID is required'),
-    body('ShipperID')
+    check('ShipperID')
         .exists()
         .isNumeric()
         .notEmpty()
         .escape()
         .withMessage('ShipperID is required'),
-    body('OrderDate')
+    check('OrderDate')
         .exists()
-        .isString()
+        .isDate({
+            format: 'AAAA-MM-DDTHH:MM:SS.SSSZ'
+        })
         .notEmpty()
         .escape()
         .withMessage('OrderDate is required'),
-    body('Products[]')
+    check('Products[]')
         .exists()
         .isArray()
         .notEmpty()
         .withMessage('The list of products is required'),
-    body('Products.*.ProductID')
+    check('Products.*.ProductID')
         .exists()
         .isNumeric()
         .notEmpty()
         .escape()
         .withMessage('Missing ProductID on a Product'),
-    body('Products.*.Quantity')
+    check('Products.*.Quantity')
         .exists()
         .isNumeric()
         .notEmpty()

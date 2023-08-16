@@ -1,31 +1,29 @@
-import { body, validationResult, matchedData } from "express-validator";
+import { check, validationResult, matchedData } from "express-validator";
 
 export const validateCreateRequestbody = [
-    body('ProductName')
+    check('ProductName')
         .exists()
         .isString()
-        .notEmpty()
-        .escape()
         .trim()
+        .notEmpty()
         .withMessage('ProductName is required'),
-    body('SupplierID')
+    check('SupplierID')
         .exists()
         .isNumeric()
         .notEmpty()
         .withMessage('SupplierID is required'),
-    body('CategoryID')
+    check('CategoryID')
         .exists()
         .isNumeric()
         .notEmpty()
         .withMessage('CategoryID is required'),
-    body('Unit')
+    check('Unit')
         .exists()
         .isString()
-        .notEmpty()
-        .escape()
         .trim()
+        .notEmpty()
         .withMessage('Unit is required'),
-    body('Price')
+    check('Price')
         .exists()
         .isNumeric()
         .notEmpty()
@@ -44,31 +42,31 @@ export const validateCreateRequestbody = [
     }
 ]
 export const validateUpdateRequestbody = [
-    body('ProductName')
+    check('ProductName')
         .optional()
         .isString()
+        .trim()
         .notEmpty()
         .escape()
-        .trim()
         .withMessage('ProductName is required'),
-    body('SupplierID')
+    check('SupplierID')
         .optional()
         .isNumeric()
         .notEmpty()
         .withMessage('SupplierID is required'),
-    body('CategoryID')
+    check('CategoryID')
         .optional()
         .isNumeric()
         .notEmpty()
         .withMessage('CategoryID is required'),
-    body('Unit')
+    check('Unit')
         .optional()
         .isString()
+        .trim()
         .notEmpty()
         .escape()
-        .trim()
         .withMessage('Unit is required'),
-    body('Price')
+    check('Price')
         .optional()
         .isNumeric()
         .notEmpty()

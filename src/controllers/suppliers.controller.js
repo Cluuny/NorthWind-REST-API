@@ -41,7 +41,7 @@ export const createSupplier = async (req, res) => {
         const createSupplierQuery = await prisma.suppliers.create({
             data: encryptedSupplierData[0]
         })
-        res.json({
+        res.status(201).json({
             SupplierID: createSupplierQuery.SupplierID
         })
     } catch (error) {
@@ -91,9 +91,7 @@ export const updateSupplier = async (req, res) => {
             },
             data: encryptedSupplierData[0]
         })
-        res.json({
-            updated: true
-        })
+        res.sendStatus(204)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })

@@ -1,19 +1,17 @@
-import { body, matchedData, validationResult } from "express-validator";
+import { check, matchedData, validationResult } from "express-validator";
 
 export const validateCreateRequestBody = [
-    body('CategoryName')
+    check('CategoryName')
         .exists()
         .isString()
-        .notEmpty()
-        .escape()
         .trim()
+        .notEmpty()
         .withMessage('A Category must have a name.'),
-    body('Description')
+    check('Description')
         .exists()
         .isString()
-        .notEmpty()
-        .escape()
         .trim()
+        .notEmpty()
         .withMessage('A Category must have a description.'),
     (req, res, next) => {
         const errors = validationResult(req)
@@ -31,19 +29,19 @@ export const validateCreateRequestBody = [
 
 export const validateUpdateRequestBody = [
     [
-        body('CategoryName')
+        check('CategoryName')
             .optional()
             .isString()
+            .trim()
             .notEmpty()
             .escape()
-            .trim()
             .withMessage('A Category must have a value'),
-        body('Description')
+        check('Description')
             .optional()
             .isString()
+            .trim()
             .notEmpty()
             .escape()
-            .trim()
             .withMessage('A Category must have a value'),
     ],
     (req, res, next) => {
@@ -59,5 +57,4 @@ export const validateUpdateRequestBody = [
         }
         return next()
     },
-
 ]

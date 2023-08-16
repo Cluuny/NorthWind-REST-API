@@ -1,38 +1,42 @@
-import { check, validationResult, matchedData } from "express-validator";
+import { body, validationResult, matchedData } from 'express-validator';
 
 export const validateCreateRequestbody = [
-    check('LastName')
+    body('SupplierName')
         .exists()
         .isString()
         .trim()
         .notEmpty()
-        .withMessage('LastName is required'),
-    check('FirstName')
+        .withMessage('SupplierName is required'),
+    body('ContactName')
         .exists()
         .isString()
         .trim()
         .notEmpty()
-        .withMessage('FirstName is required'),
-    check('Photo')
+        .withMessage('ContactName is required'),
+    body('Address')
         .exists()
         .isString()
         .trim()
         .notEmpty()
-        .withMessage('Photo is required'),
-    check('Notes')
+        .withMessage('Address is required'),
+    body('City')
         .exists()
         .isString()
         .trim()
         .notEmpty()
-        .withMessage('Notes is required'),
-    check('BirthDate')
+        .withMessage('City is required'),
+    body('PostalCode')
         .exists()
-        .isDate({
-            format: 'AAAA-MM-DDTHH:MM:SS.SSSZ'
-        })
+        .isPostalCode('any')
         .trim()
         .notEmpty()
-        .withMessage('BirthDate is required'),
+        .withMessage('PostalCode is required'),
+    body('Country')
+        .exists()
+        .isString()
+        .trim()
+        .notEmpty()
+        .withMessage('Country is required'),
     (req, res, next) => {
         const errors = validationResult(req)
         const hasErrors = !errors.isEmpty()
@@ -47,43 +51,48 @@ export const validateCreateRequestbody = [
     }
 ]
 export const validateUpdateRequestbody = [
-    check('LastName')
+    body('SupplierName')
         .optional()
         .isString()
         .trim()
         .notEmpty()
         .escape()
-        .withMessage('LastName must have a value'),
-    check('FirstName')
+        .withMessage('SupplierName is required'),
+    body('ContactName')
         .optional()
         .isString()
         .trim()
         .notEmpty()
         .escape()
-        .withMessage('FirstName must have a value'),
-    check('Photo')
+        .withMessage('ContactName is required'),
+    body('Address')
         .optional()
         .isString()
         .trim()
         .notEmpty()
         .escape()
-        .withMessage('Photo must have a value'),
-    check('Notes')
+        .withMessage('Address is required'),
+    body('City')
         .optional()
         .isString()
         .trim()
         .notEmpty()
         .escape()
-        .withMessage('Notes must have a value'),
-    check('BirthDate')
+        .withMessage('City is required'),
+    body('PostalCode')
         .optional()
-        .isDate({
-            format: 'AAAA-MM-DDTHH:MM:SS.SSSZ'
-        })
+        .isPostalCode('any')
         .trim()
         .notEmpty()
         .escape()
-        .withMessage('BirthDate is required'),
+        .withMessage('PostalCode is required'),
+    body('Country')
+        .optional()
+        .isString()
+        .trim()
+        .notEmpty()
+        .escape()
+        .withMessage('Country is required'),
     (req, res, next) => {
         const errors = validationResult(req)
         const hasErrors = !errors.isEmpty()
