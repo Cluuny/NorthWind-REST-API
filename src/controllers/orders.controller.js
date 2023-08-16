@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { decryptMany, encrypt } from "../utils/cryptoData.js"
+import { decryptMany, encrypt } from "../utils/data.crypto.js"
 const prisma = new PrismaClient()
 
 export const getOrders = async (req, res) => {
