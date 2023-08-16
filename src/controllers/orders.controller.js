@@ -64,7 +64,7 @@ export const createOrder = async (req, res) => {
                 data: encryptedOrderDetailsData[0]
             })
         }
-        res.json({
+        res.status(201).json({
             OrderID: createOrderQuery.OrderID
         })
     } catch (error) {
@@ -101,7 +101,7 @@ export const deleteOrder = async (req, res) => {
                     }
                 })
             }
-            res.sendStatus(204)
+            return res.sendStatus(204)
         } else {
             await prisma.orderdetails.deleteMany({
                 where: {
@@ -113,7 +113,7 @@ export const deleteOrder = async (req, res) => {
                     OrderID: parseInt(OrderID)
                 }
             })
-            res.sendStatus(204)
+            return res.sendStatus(204)
         }
     } catch (error) {
         if (error instanceof TypeError) {
