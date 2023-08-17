@@ -6,6 +6,7 @@ export const validateCreateRequestbody = [
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('ShipperName is required'),
     body('Phone')
         .exists()

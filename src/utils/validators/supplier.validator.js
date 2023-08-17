@@ -6,36 +6,42 @@ export const validateCreateRequestbody = [
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('SupplierName is required'),
     body('ContactName')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('ContactName is required'),
     body('Address')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('Address is required'),
     body('City')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('City is required'),
     body('PostalCode')
         .exists()
         .isPostalCode('any')
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('PostalCode is required'),
     body('Country')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('Country is required'),
     (req, res, next) => {
         const errors = validationResult(req)

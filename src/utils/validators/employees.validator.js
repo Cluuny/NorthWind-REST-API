@@ -6,32 +6,34 @@ export const validateCreateRequestbody = [
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('LastName is required'),
     check('FirstName')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('FirstName is required'),
     check('Photo')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('Photo is required'),
     check('Notes')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('Notes is required'),
     check('BirthDate')
         .exists()
-        .isDate({
-            format: 'AAAA-MM-DDTHH:MM:SS.SSSZ'
-        })
-        .trim()
         .notEmpty()
+        .isISO8601()
+        .toDate()
         .withMessage('BirthDate is required'),
     (req, res, next) => {
         const errors = validationResult(req)
@@ -77,12 +79,8 @@ export const validateUpdateRequestbody = [
         .withMessage('Notes must have a value'),
     check('BirthDate')
         .optional()
-        .isDate({
-            format: 'AAAA-MM-DDTHH:MM:SS.SSSZ'
-        })
-        .trim()
-        .notEmpty()
-        .escape()
+        .isISO8601()
+        .toDate()
         .withMessage('BirthDate is required'),
     (req, res, next) => {
         const errors = validationResult(req)

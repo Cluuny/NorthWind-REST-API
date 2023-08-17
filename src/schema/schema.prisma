@@ -7,85 +7,99 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model categories {
+model Categories {
     CategoryID   Int        @id @unique @default(autoincrement())
-    CategoryName String     @unique @NorthwindAPIDB.VarChar(50)
-    Description  String     @NorthwindAPIDB.VarChar(255)
+    CategoryName String     @NorthwindAPIDB.VarChar(256)
+    Description  String     @NorthwindAPIDB.VarChar(256)
     products     products[]
+
+    @@unique([CategoryName, Description])
+    @@index([CategoryName], name: "CategoryName_idx")
 }
 
-model customers {
-    CustomerID       Int      @id @unique @default(autoincrement())
-    CustomerName     String   @NorthwindAPIDB.VarChar(255)
-    ContactName      String   @NorthwindAPIDB.VarChar(255)
-    CustomerPassword String   @NorthwindAPIDB.VarChar(255)
-    Address          String   @unique @NorthwindAPIDB.VarChar(255)
-    City             String   @NorthwindAPIDB.VarChar(255)
-    PostalCode       String   @NorthwindAPIDB.VarChar(255)
-    Country          String   @NorthwindAPIDB.VarChar(255)
-    orders           orders[]
+model Customers {
+    CustomerID   Int      @id @unique @default(autoincrement())
+    CustomerName String   @NorthwindAPIDB.VarChar(256)
+    ContactName  String   @NorthwindAPIDB.VarChar(256)
+    Address      String   @NorthwindAPIDB.VarChar(256)
+    City         String   @NorthwindAPIDB.VarChar(256)
+    PostalCode   String   @NorthwindAPIDB.VarChar(256)
+    Country      String   @NorthwindAPIDB.VarChar(256)
+    orders       Orders[]
+
+    @@unique([CustomerName, ContactName])
+    @@index([CustomerName], name: "CustomerName_idx")
 }
 
-model employees {
+model Employees {
     EmployeeID Int      @id @unique @default(autoincrement())
-    LastName   String   @NorthwindAPIDB.VarChar(255)
-    FirstName  String   @NorthwindAPIDB.VarChar(255)
-    BirthDate  String   @NorthwindAPIDB.VarChar(255)
-    Photo      String   @NorthwindAPIDB.VarChar(255)
-    Notes      String   @NorthwindAPIDB.VarChar(1024)
-    orders     orders[]
+    LastName   String   @NorthwindAPIDB.VarChar(256)
+    FirstName  String   @NorthwindAPIDB.VarChar(256)
+    BirthDate  DateTime
+    Photo      String   @NorthwindAPIDB.VarChar(256)
+    Notes      String   @NorthwindAPIDB.VarChar(2048)
+    orders     Orders[]
 
     @@unique(fields: [FirstName, LastName])
+    @@index([LastName], name: "LastName_idx")
 }
 
-model shippers {
+model Shippers {
     ShipperID   Int      @id @unique @default(autoincrement())
-    ShipperName String   @unique @NorthwindAPIDB.VarChar(255)
-    Phone       String   @unique @NorthwindAPIDB.VarChar(255)
-    orders      orders[]
+    ShipperName String   @unique @NorthwindAPIDB.VarChar(256)
+    Phone       String   @unique @NorthwindAPIDB.VarChar(256)
+    orders      Orders[]
+
+    @@index([ShipperName], name: "ShipperName_idx")
 }
 
-model suppliers {
+model Suppliers {
     SupplierID   Int        @id @unique @default(autoincrement())
-    SupplierName String     @unique @NorthwindAPIDB.VarChar(255)
-    ContactName  String     @NorthwindAPIDB.VarChar(255)
-    Address      String     @NorthwindAPIDB.VarChar(255)
-    City         String     @NorthwindAPIDB.VarChar(255)
-    PostalCode   String     @NorthwindAPIDB.VarChar(255)
-    Country      String     @NorthwindAPIDB.VarChar(255)
-    Phone        String     @unique @NorthwindAPIDB.VarChar(255)
+    SupplierName String     @NorthwindAPIDB.VarChar(256)
+    ContactName  String     @NorthwindAPIDB.VarChar(256)
+    Address      String     @NorthwindAPIDB.VarChar(256)
+    City         String     @NorthwindAPIDB.VarChar(256)
+    PostalCode   String     @NorthwindAPIDB.VarChar(256)
+    Country      String     @NorthwindAPIDB.VarChar(256)
+    Phone        String     @NorthwindAPIDB.VarChar(256)
     products     products[]
-}
 
-model orders {
-    OrderID      Int            @id @unique @default(autoincrement())
-    CustomerID   Int
-    EmployeeID   Int
-    OrderDate    String         @NorthwindAPIDB.VarChar(255)
-    ShipperID    Int
-    Customer     customers      @relation(fields: [CustomerID], references: [CustomerID])
-    Employee     employees      @relation(fields: [EmployeeID], references: [EmployeeID])
-    Shipper      shippers       @relation(fields: [ShipperID], references: [ShipperID])
-    orderdetails orderdetails[]
+    @@unique([SupplierName, ContactName, Phone])
+    @@index([SupplierName], name: "SupplierName_idx")
 }
 
 model products {
     ProductID    Int            @id @unique @default(autoincrement())
-    ProductName  String         @unique @NorthwindAPIDB.VarChar(255)
+    ProductName  String         @NorthwindAPIDB.VarChar(256)
     SupplierID   Int
     CategoryID   Int
-    Unit         String         @NorthwindAPIDB.VarChar(255)
-    Price        Decimal        @NorthwindAPIDB.Decimal(10, 0)
-    Supplier     suppliers      @relation(fields: [SupplierID], references: [SupplierID])
-    Category     categories     @relation(fields: [CategoryID], references: [CategoryID])
-    orderdetails orderdetails[]
+    Unit         String         @NorthwindAPIDB.VarChar(256)
+    Price        Int
+    Supplier     Suppliers      @relation(fields: [SupplierID], references: [SupplierID])
+    Category     Categories     @relation(fields: [CategoryID], references: [CategoryID])
+    orderdetails OrderDetails[]
+
+    @@unique([ProductName])
+    @@index([ProductName], name: "ProductName_idx")
 }
 
-model orderdetails {
+model Orders {
+    OrderID      Int            @id @unique @default(autoincrement())
+    CustomerID   Int
+    EmployeeID   Int
+    OrderDate    DateTime
+    ShipperID    Int
+    Customer     Customers      @relation(fields: [CustomerID], references: [CustomerID])
+    Employee     Employees      @relation(fields: [EmployeeID], references: [EmployeeID])
+    Shipper      Shippers       @relation(fields: [ShipperID], references: [ShipperID])
+    orderdetails OrderDetails[]
+}
+
+model OrderDetails {
     OrderDetailID Int      @id @unique @default(autoincrement())
     OrderID       Int
     ProductID     Int
     Quantity      String   @NorthwindAPIDB.VarChar(255)
-    Order         orders   @relation(fields: [OrderID], references: [OrderID])
+    Order         Orders   @relation(fields: [OrderID], references: [OrderID])
     Product       products @relation(fields: [ProductID], references: [ProductID])
 }

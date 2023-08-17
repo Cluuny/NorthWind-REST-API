@@ -6,27 +6,29 @@ export const validateCreateRequestbody = [
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('ProductName is required'),
     check('SupplierID')
         .exists()
-        .isNumeric()
         .notEmpty()
+        .isNumeric()
         .withMessage('SupplierID is required'),
     check('CategoryID')
         .exists()
-        .isNumeric()
         .notEmpty()
+        .isNumeric()
         .withMessage('CategoryID is required'),
     check('Unit')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('Unit is required'),
     check('Price')
         .exists()
-        .isNumeric()
         .notEmpty()
+        .isNumeric()
         .withMessage('Price is required'),
     (req, res, next) => {
         const errors = validationResult(req)

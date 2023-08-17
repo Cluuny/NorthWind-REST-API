@@ -44,7 +44,7 @@ export const createOrder = async (req, res) => {
     try {
         const { CustomerID, EmployeeID, ShipperID, Products } = req.body
         let { OrderDate } = req.body
-        OrderDate = new Date(OrderDate).toISOString();
+        OrderDate = new Date('12-09-2023').toISOString();
         const encryptedOrderData = encrypt([{
             CustomerID: parseInt(CustomerID),
             EmployeeID: parseInt(EmployeeID),

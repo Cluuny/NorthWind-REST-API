@@ -6,12 +6,14 @@ export const validateCreateRequestBody = [
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('A Category must have a name.'),
     check('Description')
         .exists()
         .isString()
         .trim()
         .notEmpty()
+        .escape()
         .withMessage('A Category must have a description.'),
     (req, res, next) => {
         const errors = validationResult(req)
