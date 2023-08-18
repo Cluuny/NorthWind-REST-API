@@ -1,37 +1,25 @@
 import { PrismaClient } from "@prisma/client"
-import { decryptMany, encrypt } from "../utils/data.crypto.js"
 const prisma = new PrismaClient()
 
 export const getOrders = async (req, res) => {
     try {
-        let decryptedOrdersQuery
-        const { CustomerID } = req.body
+        const { id } = req.query
         const OrdersQuery = await prisma.orders.findMany({
-            where: { CustomerID: parseInt(CustomerID) },
+            where: { OrderID: parseInt(id) },
             select: {
                 OrderID: true,
-                CustomerID: false,
-                Employee: {
-                    select: {
-                        EmployeeID: true,
-                    }
-                },
+                CustomerID: true,
+                EmployeeID: true,
                 OrderDate: true,
-                Shipper: {
-                    select: {
-                        ShipperID: true,
-                    }
-                },
                 orderdetails: {
                     select: {
                         ProductID: true,
-                        Quantity: true
+                        Unit: true,
                     }
                 }
-            },
+            }
         })
-        decryptedOrdersQuery = decryptMany(OrdersQuery)
-        res.status(200).json(decryptedOrdersQuery)
+        res.status(200).json(OrdersQuery)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
@@ -42,26 +30,22 @@ export const getOrders = async (req, res) => {
 }
 export const createOrder = async (req, res) => {
     try {
-        const { CustomerID, EmployeeID, ShipperID, Products } = req.body
-        let { OrderDate } = req.body
-        OrderDate = new Date('12-09-2023').toISOString();
-        const encryptedOrderData = encrypt([{
-            CustomerID: parseInt(CustomerID),
-            EmployeeID: parseInt(EmployeeID),
-            OrderDate: OrderDate,
-            ShipperID: parseInt(ShipperID)
-        }])
+        const { CustomerID, EmployeeID, ShipperID, OrderDate, Products } = req.body
         const createOrderQuery = await prisma.orders.create({
-            data: encryptedOrderData[0]
+            data: {
+                CustomerID: parseInt(CustomerID),
+                EmployeeID: parseInt(EmployeeID),
+                ShipperID: parseInt(ShipperID),
+                OrderDate: OrderDate,
+            }
         })
         for (const product of Products) {
-            let encryptedOrderDetailsData = encrypt([{
-                OrderID: parseInt(createOrderQuery.OrderID),
-                ProductID: parseInt(product.ProductID),
-                Quantity: product.Quantity.toString()
-            }])
             await prisma.orderdetails.create({
-                data: encryptedOrderDetailsData[0]
+                data: {
+                    OrderID: createOrderQuery.OrderID,
+                    ProductID: parseInt(product.ProductID),
+                    Unit: parseInt(product.Unit)
+                }
             })
         }
         res.status(201).json({
@@ -79,42 +63,18 @@ export const createOrder = async (req, res) => {
 }
 export const deleteOrder = async (req, res) => {
     try {
-        const { CustomerID, OrderID } = req.body
-        let customerOrderQuery = await prisma.orders.findUnique({
+        const { id } = req.query
+        await prisma.orderdetails.deleteMany({
             where: {
-                OrderID: parseInt(OrderID)
-            },
-            select: {
-                CustomerID: true
+                OrderID: parseInt(id)
             }
         })
-        if (customerOrderQuery.CustomerID !== parseInt(CustomerID)) {
-            throw new Error("CustomerID does not match with OrderID")
-        }
-        if (req.body.hasOwnProperty('Products')) {
-            const { Products } = req.body
-            for (const product of Products) {
-                await prisma.orderdetails.deleteMany({
-                    where: {
-                        OrderID: parseInt(OrderID),
-                        ProductID: parseInt(product.ProductID)
-                    }
-                })
+        await prisma.orders.delete({
+            where: {
+                OrderID: parseInt(id)
             }
-            return res.sendStatus(204)
-        } else {
-            await prisma.orderdetails.deleteMany({
-                where: {
-                    OrderID: parseInt(OrderID)
-                }
-            })
-            await prisma.orders.delete({
-                where: {
-                    OrderID: parseInt(OrderID)
-                }
-            })
-            return res.sendStatus(204)
-        }
+        })
+        return res.sendStatus(204)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })

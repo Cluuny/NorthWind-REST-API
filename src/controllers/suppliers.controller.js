@@ -1,14 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany, encryptMany } from "../utils/data.crypto.js";
 const prisma = new PrismaClient();
 
 export const getSuppliers = async (req, res) => {
     try {
         let getSuppliersQuery
-        let decryptedSuppliersQuery
         if (Object.keys(req.query).length === 0) {
             getSuppliersQuery = await prisma.suppliers.findMany()
-            decryptedSuppliersQuery = decryptMany(getSuppliersQuery)
         } else {
             const { id } = req.query
             getSuppliersQuery = await prisma.suppliers.findUnique({
@@ -16,9 +13,8 @@ export const getSuppliers = async (req, res) => {
                     SupplierID: parseInt(id)
                 }
             })
-            decryptedSuppliersQuery = decryptMany([getSuppliersQuery])
         }
-        res.status(200).json(decryptedSuppliersQuery)
+        res.status(200).json(getSuppliersQuery)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
@@ -30,16 +26,15 @@ export const getSuppliers = async (req, res) => {
 export const createSupplier = async (req, res) => {
     try {
         const { SupplierName, ContactName, Address, City, PostalCode, Country } = req.body
-        const encryptedSupplierData = encryptMany([{
-            SupplierName,
-            ContactName,
-            Address,
-            City,
-            PostalCode,
-            Country
-        }])
         const createSupplierQuery = await prisma.suppliers.create({
-            data: encryptedSupplierData[0]
+            data: {
+                SupplierName,
+                ContactName,
+                Address,
+                City,
+                PostalCode,
+                Country
+            }
         })
         res.status(201).json({
             SupplierID: createSupplierQuery.SupplierID
@@ -77,19 +72,18 @@ export const updateSupplier = async (req, res) => {
     try {
         const { id } = req.query
         const { SupplierName, ContactName, Address, City, PostalCode, Country } = req.body
-        const encryptedSupplierData = encryptMany([{
-            SupplierName,
-            ContactName,
-            Address,
-            City,
-            PostalCode,
-            Country
-        }])
         await prisma.suppliers.update({
             where: {
                 SupplierID: parseInt(id)
             },
-            data: encryptedSupplierData[0]
+            data: {
+                SupplierName,
+                ContactName,
+                Address,
+                City,
+                PostalCode,
+                Country
+            }
         })
         res.sendStatus(204)
     } catch (error) {

@@ -31,9 +31,10 @@ export const validateCreateRequestbody = [
         .withMessage('Notes is required'),
     check('BirthDate')
         .exists()
+        .isString()
+        .trim()
         .notEmpty()
-        .isISO8601()
-        .toDate()
+        .escape()
         .withMessage('BirthDate is required'),
     (req, res, next) => {
         const errors = validationResult(req)

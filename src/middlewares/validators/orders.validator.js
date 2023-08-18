@@ -13,9 +13,10 @@ export const validateCreateRequestbody = [
         .withMessage('EmployeeID is required'),
     check('OrderDate')
         .exists()
+        .isString()
+        .trim()
         .notEmpty()
-        .isISO8601()
-        .toDate()
+        .escape()
         .withMessage('OrderDate is required'),
     check('ShipperID')
         .exists()

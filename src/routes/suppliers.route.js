@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { getSuppliers, createSupplier, deleteSupplier, updateSupplier } from "../controllers/suppliers.controller.js";
-import { validateCreateRequestbody, validateUpdateRequestbody } from "../utils/validators/supplier.validator.js";
+import { validateCreateRequestbody, validateUpdateRequestbody } from "../middlewares/validators/supplier.validator.js";
+import { validateUser } from "../middlewares/auth/user.auth.js";
 
 const suppliersRouter = Router();
 
 suppliersRouter.get("/", getSuppliers)
-suppliersRouter.post("/", validateCreateRequestbody, createSupplier)
-suppliersRouter.delete("/", deleteSupplier)
-suppliersRouter.patch("/", validateUpdateRequestbody, updateSupplier)
+suppliersRouter.post("/", validateUser, validateCreateRequestbody, createSupplier)
+suppliersRouter.delete("/", validateUser, deleteSupplier)
+suppliersRouter.patch("/", validateUser, validateUpdateRequestbody, updateSupplier)
 
 export default suppliersRouter;

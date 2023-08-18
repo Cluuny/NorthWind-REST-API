@@ -1,13 +1,11 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany, encryptMany } from "../utils/data.crypto.js";
+
 const prisma = new PrismaClient();
 export const getEmployees = async (req, res) => {
     try {
         let getEmployeesQuery;
-        let decryptEmployeesQuery;
         if (Object.keys(req.query).length === 0) {
             getEmployeesQuery = await prisma.employees.findMany();
-            decryptEmployeesQuery = decryptMany(getEmployeesQuery);
         } else {
             const { id } = req.query;
             getEmployeesQuery = await prisma.employees.findUnique({
@@ -15,9 +13,8 @@ export const getEmployees = async (req, res) => {
                     EmployeeID: parseInt(id)
                 }
             })
-            decryptEmployeesQuery = decryptMany([getEmployeesQuery]);
         }
-        res.status(200).json(decryptEmployeesQuery);
+        res.status(200).json(getEmployeesQuery);
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
@@ -28,18 +25,15 @@ export const getEmployees = async (req, res) => {
 }
 export const createEmployee = async (req, res) => {
     try {
-        const { LastName, FirstName, Photo, Notes } = req.body
-        let { BirthDate } = req.body
-        BirthDate = new Date(BirthDate).toISOString()
-        const encryptEmployeeData = encryptMany([{
-            LastName,
-            FirstName,
-            BirthDate,
-            Photo,
-            Notes
-        }])
+        const { LastName, FirstName, BirthDate, Photo, Notes } = req.body
         const createEmployeeQuery = await prisma.employees.create({
-            data: encryptEmployeeData[0]
+            data: {
+                LastName,
+                FirstName,
+                BirthDate,
+                Photo,
+                Notes
+            }
         })
         res.status(201).json({
             EmployeeID: createEmployeeQuery.EmployeeID
@@ -74,19 +68,16 @@ export const deleteEmployee = async (req, res) => {
 export const updateEmployee = async (req, res) => {
     try {
         const { id } = req.query
-        const { LastName, FirstName, Photo, Notes } = req.body
-        let { BirthDate } = req.body
-        BirthDate = new Date(BirthDate).toISOString()
-        const encryptEmployeeData = encryptMany([{
-            LastName,
-            FirstName,
-            BirthDate,
-            Photo,
-            Notes
-        }])
+        const { LastName, FirstName, BirthDate, Photo, Notes } = req.body
         await prisma.employees.update({
             where: { EmployeeID: parseInt(id) },
-            data: encryptEmployeeData[0]
+            data: {
+                LastName,
+                FirstName,
+                BirthDate,
+                Photo,
+                Notes
+            }
         })
         res.sendStatus(204)
     } catch (error) {

@@ -1,6 +1,6 @@
 datasource NorthwindAPIDB {
     provider = "mysql"
-    url      = env("DB_ROOT_URL")
+    url      = env("DB_URL")
 }
 
 generator client {
@@ -11,7 +11,7 @@ model Categories {
     CategoryID   Int        @id @unique @default(autoincrement())
     CategoryName String     @NorthwindAPIDB.VarChar(256)
     Description  String     @NorthwindAPIDB.VarChar(256)
-    products     products[]
+    products     Products[]
 
     @@unique([CategoryName, Description])
     @@index([CategoryName], name: "CategoryName_idx")
@@ -62,13 +62,13 @@ model Suppliers {
     PostalCode   String     @NorthwindAPIDB.VarChar(256)
     Country      String     @NorthwindAPIDB.VarChar(256)
     Phone        String     @NorthwindAPIDB.VarChar(256)
-    products     products[]
+    products     Products[]
 
     @@unique([SupplierName, ContactName, Phone])
     @@index([SupplierName], name: "SupplierName_idx")
 }
 
-model products {
+model Products {
     ProductID    Int            @id @unique @default(autoincrement())
     ProductName  String         @NorthwindAPIDB.VarChar(256)
     SupplierID   Int
@@ -99,7 +99,7 @@ model OrderDetails {
     OrderDetailID Int      @id @unique @default(autoincrement())
     OrderID       Int
     ProductID     Int
-    Quantity      String   @NorthwindAPIDB.VarChar(255)
+    Unit          Int
     Order         Orders   @relation(fields: [OrderID], references: [OrderID])
-    Product       products @relation(fields: [ProductID], references: [ProductID])
+    Product       Products @relation(fields: [ProductID], references: [ProductID])
 }

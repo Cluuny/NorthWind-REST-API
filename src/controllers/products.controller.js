@@ -1,13 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { decryptMany, encryptMany } from "../utils/data.crypto.js";
 const prisma = new PrismaClient();
 export const getProducts = async (req, res) => {
     try {
         let getProductsQuery
-        let decryptedProductsQuery
         if (Object.keys(req.query).length === 0) {
             getProductsQuery = await prisma.products.findMany();
-            decryptedProductsQuery = decryptMany(getProductsQuery)
         } else {
             const { id } = req.query
             getProductsQuery = await prisma.products.findUnique({
@@ -15,9 +12,8 @@ export const getProducts = async (req, res) => {
                     ProductID: parseInt(id)
                 }
             })
-            decryptedProductsQuery = decryptMany([getProductsQuery])
         }
-        res.status(200).json(decryptedProductsQuery)
+        res.status(200).json(getProductsQuery)
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
@@ -29,15 +25,14 @@ export const getProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
     try {
         const { ProductName, SupplierID, CategoryID, Unit, Price } = req.body
-        const encryptedProductData = encryptMany([{
-            ProductName,
-            SupplierID,
-            CategoryID,
-            Unit,
-            Price
-        }])
         const createProductQuery = await prisma.products.create({
-            data: encryptedProductData[0]
+            data: {
+                ProductName,
+                SupplierID,
+                CategoryID,
+                Unit,
+                Price
+            }
         })
         res.status(201).json({
             ProductID: createProductQuery.ProductID
@@ -75,18 +70,17 @@ export const updateProduct = async (req, res) => {
     try {
         const { id } = req.query
         const { ProductName, SupplierID, CategoryID, Unit, Price } = req.body
-        const encryptedProductData = encryptMany([{
-            ProductName,
-            SupplierID,
-            CategoryID,
-            Unit,
-            Price
-        }])
         await prisma.products.update({
             where: {
                 ProductID: parseInt(id)
             },
-            data: encryptedProductData[0]
+            data: {
+                ProductName,
+                SupplierID,
+                CategoryID,
+                Unit,
+                Price
+            }
         })
         res.sendStatus(204)
     } catch (error) {
