@@ -14,7 +14,7 @@ export const getOrders = async (req, res) => {
                 orderdetails: {
                     select: {
                         ProductID: true,
-                        Unit: true,
+                        Quantity: true,
                     }
                 }
             }
@@ -44,7 +44,7 @@ export const createOrder = async (req, res) => {
                 data: {
                     OrderID: createOrderQuery.OrderID,
                     ProductID: parseInt(product.ProductID),
-                    Unit: parseInt(product.Unit)
+                    Quantity: parseInt(product.Quantity)
                 }
             })
         }

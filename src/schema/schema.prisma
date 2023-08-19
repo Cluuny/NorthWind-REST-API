@@ -99,7 +99,7 @@ model OrderDetails {
     OrderDetailID Int      @id @unique @default(autoincrement())
     OrderID       Int
     ProductID     Int
-    Unit          Int
+    Quantity      Int
     Order         Orders   @relation(fields: [OrderID], references: [OrderID])
     Product       Products @relation(fields: [ProductID], references: [ProductID])
 }
