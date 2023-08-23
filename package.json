@@ -21,7 +21,9 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.1",
     "mysql2": "^3.5.2",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "swagger-jsdoc": "^5.0.1",
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "prisma": "^5.1.1"
