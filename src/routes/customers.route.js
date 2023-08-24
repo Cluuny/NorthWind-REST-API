@@ -4,6 +4,7 @@ import { validateCreateRequestbody, validateUpdateRequestbody } from "../middlew
 import { validateUser } from "../middlewares/auth/user.auth.js";
 
 const customersRouter = Router();
+
 /**
  * @swagger
  * /api/customers:
@@ -20,7 +21,7 @@ const customersRouter = Router();
  *         description: The id of the specific Customer to get, if this parameter is not provided, the endpoint returns all the Customers
  *     responses:
  *       200:
- *         description: List of categories
+ *         description: List of Customers
  *         content:
  *           application/json:
  *             schema:
@@ -217,37 +218,37 @@ customersRouter.delete("/", validateUser, deleteCustomer)
  *         description: The id of the customer to update
  *       - in: body
  *         name: CustomerName
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The name of the new Customer
  *       - in: body
  *         name: ContactName
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The contact name of the new Customer
  *       - in: body
  *         name: Address
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The address of the new Customer
  *       - in: body
  *         name: City
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The city of the new Customer
  *       - in: body
  *         name: PostalCode
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The postal code of the city of the new Customer
  *       - in: body
  *         name: Country
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *         description: The country of the new Customer
