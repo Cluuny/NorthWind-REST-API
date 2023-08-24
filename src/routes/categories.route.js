@@ -152,6 +152,17 @@ categoriesRouter.post("/", validateUser, validateCreateRequestBody, createCatego
  *     responses:
  *       204:
  *         description: The category was succesfull deleted
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:

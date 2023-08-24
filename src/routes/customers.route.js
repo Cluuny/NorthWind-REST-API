@@ -128,6 +128,17 @@ customersRouter.get("/", getCustomers)
  *               properties:
  *                 CustomerID: 
  *                   type: integer
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:
@@ -174,6 +185,17 @@ customersRouter.post("/", validateUser, validateCreateRequestbody, createCustome
  *     responses:
  *       204:
  *         description: The customer was succesfull deleted
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:
@@ -255,6 +277,17 @@ customersRouter.delete("/", validateUser, validateQueryParam, deleteCustomer)
  *     responses:
  *       204:
  *         description: The customer was succesfull updated
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:

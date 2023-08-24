@@ -52,17 +52,40 @@ const apiRouter = Router();
  *                     suppliers:
  *                       type: string
  *                       example: /api/suppliers
- *       400:
- *         description: Bad Request
+ *       302:
+ *         description: Redirected to the main api endpoint
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 message: 
+ *               type: object 
+ *               properties: 
+ *                 message:
  *                   type: string
- *                 error: 
- *                   type: string
+ *                   example: Welcome to the API
+ *                 endpoints:
+ *                   type: object
+ *                   properties:
+ *                     categories:
+ *                       type: string
+ *                       example: /api/categories
+ *                     customers:
+ *                       type: string
+ *                       example: /api/customers
+ *                     employees:
+ *                       type: string
+ *                       example: /api/employees
+ *                     orders:
+ *                       type: string
+ *                       example: /api/orders
+ *                     products:
+ *                       type: string
+ *                       example: /api/products
+ *                     shippers:
+ *                       type: string
+ *                       example: /api/shippers
+ *                     suppliers:
+ *                       type: string
+ *                       example: /api/suppliers
  */
 apiRouter.get("/", (req, res, next) => {
     res.json({
