@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createCategory, deleteCategory, getCategory, updateCategory } from "../controllers/categories.controller.js";
-import { validateCreateRequestBody, validateUpdateRequestBody } from "./../middlewares/validators/categories.validator.js"
+import { validateCreateRequestBody, validateUpdateRequestBody, validateQueryParam } from "./../middlewares/validators/categories.validator.js"
 import { validateUser } from "../middlewares/auth/user.auth.js";
 
 const categoriesRouter = Router();
@@ -95,6 +95,17 @@ categoriesRouter.get("/", getCategory)
  *               properties:
  *                 CategoryID: 
  *                   type: integer
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:
@@ -162,7 +173,7 @@ categoriesRouter.post("/", validateUser, validateCreateRequestBody, createCatego
  *                 error: 
  *                   type: string
  */
-categoriesRouter.delete("/", validateUser, deleteCategory)
+categoriesRouter.delete("/", validateUser, validateQueryParam, deleteCategory)
 
 /**
  * @swagger
@@ -198,6 +209,17 @@ categoriesRouter.delete("/", validateUser, deleteCategory)
  *     responses:
  *       204:
  *         description: The category was succesfull updated
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  *       401:
  *         description: User Unauthorized
  *         content:
@@ -230,6 +252,6 @@ categoriesRouter.delete("/", validateUser, deleteCategory)
  *                 error: 
  *                   type: string
  */
-categoriesRouter.patch("/", validateUser, validateUpdateRequestBody, updateCategory)
+categoriesRouter.patch("/", validateUser, validateQueryParam, validateUpdateRequestBody, updateCategory)
 
 export default categoriesRouter;

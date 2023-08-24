@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createEmployee, deleteEmployee, getEmployees, updateEmployee } from "../controllers/employees.controller.js";
-import { validateCreateRequestbody, validateUpdateRequestbody } from "../middlewares/validators/employees.validator.js";
+import { validateCreateRequestbody, validateUpdateRequestbody, validateQueryParam } from "../middlewares/validators/employees.validator.js";
 import { validateUser } from "../middlewares/auth/user.auth.js";
 
 
@@ -188,7 +188,7 @@ employeesRouter.post("/", validateUser, validateCreateRequestbody, createEmploye
  *                 error: 
  *                   type: string
  */
-employeesRouter.delete("/", validateUser, deleteEmployee)
+employeesRouter.delete("/", validateUser, validateQueryParam, deleteEmployee)
 
 /**
  * @swagger
@@ -274,6 +274,6 @@ employeesRouter.delete("/", validateUser, deleteEmployee)
  *                 error: 
  *                   type: string
  */
-employeesRouter.patch("/", validateUser, validateUpdateRequestbody, updateEmployee)
+employeesRouter.patch("/", validateUser, validateQueryParam, validateUpdateRequestbody, updateEmployee)
 
 export default employeesRouter;

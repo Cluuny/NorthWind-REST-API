@@ -8,6 +8,7 @@ import shippersRouter from "./shippers.router.js";
 import suppliersRouter from "./suppliers.route.js";
 
 const apiRouter = Router();
+
 /**
  * @swagger
  * /api:
@@ -51,8 +52,18 @@ const apiRouter = Router();
  *                     suppliers:
  *                       type: string
  *                       example: /api/suppliers
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                 error: 
+ *                   type: string
  */
-
 apiRouter.get("/", (req, res, next) => {
     res.json({
         message: "Welcome to the API",
@@ -67,6 +78,7 @@ apiRouter.get("/", (req, res, next) => {
         }
     })
 })
+
 apiRouter.use("/categories", categoriesRouter);
 apiRouter.use("/customers", customersRouter);
 apiRouter.use("/employees", employeesRouter)
@@ -74,11 +86,9 @@ apiRouter.use("/orders", ordersRouter)
 apiRouter.use("/products", productsRouter)
 apiRouter.use("/shippers", shippersRouter)
 apiRouter.use("/suppliers", suppliersRouter)
+
 apiRouter.use((req, res) => {
-    res.status(404).json({
-        error: `This endpoint only accepts GET request`,
-        errorDetails: `${req.baseUrl} -> ${req.method} not found`
-    })
+    res.redirect("/api")
 })
 
 export default apiRouter;

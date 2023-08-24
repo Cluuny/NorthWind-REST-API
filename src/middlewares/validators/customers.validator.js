@@ -1,4 +1,25 @@
-import { check, validationResult, matchedData } from 'express-validator'
+import { check, query, validationResult, matchedData } from 'express-validator'
+
+export const validateQueryParam = [
+    query('id')
+        .exists()
+        .isString()
+        .trim()
+        .notEmpty()
+        .escape()
+        .withMessage('An ID must be provided'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                message: "Bad request",
+                errors: errors.array()
+            })
+        }
+        req.body = matchedData(req);
+        next();
+    }
+]
 
 export const validateCreateRequestbody = [
     check('CustomerName')

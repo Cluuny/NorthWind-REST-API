@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { createCustomer, deleteCustomer, getCustomers, updateCustomer } from "../controllers/customers.controller.js";
-import { validateCreateRequestbody, validateUpdateRequestbody } from "../middlewares/validators/customers.validator.js";
+import { validateCreateRequestbody, validateUpdateRequestbody, validateQueryParam } from "../middlewares/validators/customers.validator.js";
 import { validateUser } from "../middlewares/auth/user.auth.js";
 
 const customersRouter = Router();
@@ -195,7 +195,7 @@ customersRouter.post("/", validateUser, validateCreateRequestbody, createCustome
  *                 error: 
  *                   type: string
  */
-customersRouter.delete("/", validateUser, deleteCustomer)
+customersRouter.delete("/", validateUser, validateQueryParam, deleteCustomer)
 
 /**
  * @swagger
@@ -287,6 +287,6 @@ customersRouter.delete("/", validateUser, deleteCustomer)
  *                 error: 
  *                   type: string
  */
-customersRouter.patch("/", validateUser, validateUpdateRequestbody, updateCustomer)
+customersRouter.patch("/", validateUser, validateQueryParam, validateUpdateRequestbody, updateCustomer)
 
 export default customersRouter

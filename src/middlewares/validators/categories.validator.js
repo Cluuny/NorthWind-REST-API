@@ -1,24 +1,23 @@
-import { check, matchedData, param, validationResult } from "express-validator";
+import { check, matchedData, query, validationResult } from "express-validator";
 
-export const validateGetRequestParam = [
-    param('Category')
+export const validateQueryParam = [
+    query('id')
         .exists()
         .isString()
         .trim()
-        .escape()
         .notEmpty()
-        .withMessage('We need the name of the Category!'),
+        .escape()
+        .withMessage('An ID must be provided'),
     (req, res, next) => {
-        const errors = validationResult(req)
-        const hasErrors = !errors.isEmpty()
-        if (hasErrors) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             return res.status(400).json({
                 message: "Bad request",
                 errors: errors.array()
             })
         }
-        req.params = matchedData(req)
-        return next()
+        req.body = matchedData(req);
+        next();
     }
 ]
 
