@@ -77,13 +77,19 @@ categoriesRouter.get("/", getCategory)
  *         name: CategoryName
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             CategoryName:
+ *               type: string
  *         description: The name of the new Category
  *       - in: body
  *         name: Description
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             Description:
+ *               type: string
  *         description: A Description for the new Category
  *     responses:
  *       201:
@@ -209,14 +215,20 @@ categoriesRouter.delete("/", validateUser, validateQueryParam, deleteCategory)
  *         name: CategoryName
  *         required: false
  *         schema:
- *           type: string
- *         description: The new name of the category
+ *           type: object
+ *           properties:
+ *             CategoryName:
+ *               type: string
+ *         description: The name of the Category
  *       - in: body
  *         name: Description
  *         required: false
  *         schema:
- *           type: string
- *         description: The new description of the category
+ *           type: object
+ *           properties:
+ *             Description:
+ *               type: string
+ *         description: A Description for the Category
  *     responses:
  *       204:
  *         description: The category was succesfull updated

@@ -85,31 +85,46 @@ employeesRouter.get("/", getEmployees)
  *         name: LastName
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             LastName:
+ *               type: string
  *         description: The last name of the new Employee
  *       - in: body
  *         name: FirstName
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             FirstName:
+ *               type: string   
  *         description: The first name of the new Employee
  *       - in: body
  *         name: BirthDate
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             BirthDate:
+ *               type: string
  *         description: The birth date of the new Employee
  *       - in: body
  *         name: Photo
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             Photo:
+ *               type: string
  *         description: The link to a profile photo for the new Employee
  *       - in: body
  *         name: Notes
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             Notes:
+ *               type: string
  *         description: Some info about the new Employee
  *     responses:
  *       201:
@@ -119,7 +134,7 @@ employeesRouter.get("/", getEmployees)
  *             schema:
  *               type: object
  *               properties:
- *                 CustomerID: 
+ *                 EmployeeID: 
  *                   type: integer
  *       400:
  *         description: Bad Request
@@ -235,32 +250,47 @@ employeesRouter.delete("/", validateUser, validateQueryParam, deleteEmployee)
  *         name: LastName
  *         required: false
  *         schema:
- *           type: string
- *         description: The last name of the new Employee
+ *           type: object
+ *           properties:
+ *             LastName:
+ *               type: string
+ *         description: The last name of the Employee
  *       - in: body
  *         name: FirstName
  *         required: false
  *         schema:
- *           type: string
- *         description: The first name of the new Employee
+ *           type: object
+ *           properties:
+ *             FirstName:
+ *               type: string   
+ *         description: The first name of the Employee
  *       - in: body
  *         name: BirthDate
  *         required: false
  *         schema:
- *           type: string
- *         description: The birth date of the new Employee
+ *           type: object
+ *           properties:
+ *             BirthDate:
+ *               type: string
+ *         description: The birth date of the Employee
  *       - in: body
  *         name: Photo
  *         required: false
  *         schema:
- *           type: string
- *         description: The link to a profile photo for the new Employee
+ *           type: object
+ *           properties:
+ *             Photo:
+ *               type: string
+ *         description: The link to a profile photo for the Employee
  *       - in: body
  *         name: Notes
  *         required: false
  *         schema:
- *           type: string
- *         description: Some info about the new Employee
+ *           type: object
+ *           properties:
+ *             Notes:
+ *               type: string
+ *         description: Some info about the Employee
  *     responses:
  *       204:
  *         description: The employee was succesfull updated

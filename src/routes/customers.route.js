@@ -86,37 +86,55 @@ customersRouter.get("/", getCustomers)
  *         name: CustomerName
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             CustomerName:
+ *               type: string
  *         description: The name of the new Customer
  *       - in: body
  *         name: ContactName
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             ContactName:
+ *               type: string
  *         description: The contact name of the new Customer
  *       - in: body
  *         name: Address
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             Address:
+ *               type: string
  *         description: The address of the new Customer
  *       - in: body
  *         name: City
  *         required: true
  *         schema:
- *           type: string
+ *           type: ojbect
+ *           properties:
+ *             City:
+ *               type: string
  *         description: The city of the new Customer
  *       - in: body
  *         name: PostalCode
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             PostalCode:
+ *               type: string
  *         description: The postal code of the city of the new Customer
  *       - in: body
  *         name: Country
  *         required: true
  *         schema:
- *           type: string
+ *           type: object
+ *           properties:
+ *             Country:
+ *               type: string
  *         description: The country of the new Customer
  *     responses:
  *       201:
@@ -242,38 +260,56 @@ customersRouter.delete("/", validateUser, validateQueryParam, deleteCustomer)
  *         name: CustomerName
  *         required: false
  *         schema:
- *           type: string
- *         description: The name of the new Customer
+ *           type: object
+ *           properties:
+ *             CustomerName:
+ *               type: string
+ *         description: The name of the Customer
  *       - in: body
  *         name: ContactName
  *         required: false
  *         schema:
- *           type: string
- *         description: The contact name of the new Customer
+ *           type: object
+ *           properties:
+ *             ContactName:
+ *               type: string
+ *         description: The contact name of the Customer
  *       - in: body
  *         name: Address
  *         required: false
  *         schema:
- *           type: string
- *         description: The address of the new Customer
+ *           type: object
+ *           properties:
+ *             Address:
+ *               type: string
+ *         description: The address of the Customer
  *       - in: body
  *         name: City
  *         required: false
  *         schema:
- *           type: string
- *         description: The city of the new Customer
+ *           type: ojbect
+ *           properties:
+ *             City:
+ *               type: string
+ *         description: The city of the Customer
  *       - in: body
  *         name: PostalCode
  *         required: false
  *         schema:
- *           type: string
- *         description: The postal code of the city of the new Customer
+ *           type: object
+ *           properties:
+ *             PostalCode:
+ *               type: string
+ *         description: The postal code of the city of the Customer
  *       - in: body
  *         name: Country
  *         required: false
  *         schema:
- *           type: string
- *         description: The country of the new Customer
+ *           type: object
+ *           properties:
+ *             Country:
+ *               type: string
+ *         description: The country of the Customer
  *     responses:
  *       204:
  *         description: The customer was succesfull updated

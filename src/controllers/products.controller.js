@@ -38,13 +38,7 @@ export const createProduct = async (req, res) => {
             ProductID: createProductQuery.ProductID
         })
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
-        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
-            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
-        } else {
-            res.status(500).json({ message: "Internal Server Error", error: error.message })
-        }
+        res.status(500).json({ message: "Internal Server Error", error: error.message })
     }
 }
 export const deleteProduct = async (req, res) => {
@@ -57,13 +51,7 @@ export const deleteProduct = async (req, res) => {
         })
         res.sendStatus(204)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
-        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
-            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
-        } else {
-            res.status(500).json({ message: "Internal Server Error", error: error.message })
-        }
+        res.status(500).json({ message: "Internal Server Error", error: error.message })
     }
 }
 export const updateProduct = async (req, res) => {
@@ -86,8 +74,6 @@ export const updateProduct = async (req, res) => {
     } catch (error) {
         if (error instanceof TypeError) {
             res.status(404).json({ message: "Not Found", error: error.message })
-        } else if (error.name.toString() === 'PrismaClientUnknownRequestError') {
-            res.status(403).json({ message: "This API only provides GET Enpoints, if you have any questions, please contact support at: vistrent834@gmail.com", error: "User Unauthorized" })
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }

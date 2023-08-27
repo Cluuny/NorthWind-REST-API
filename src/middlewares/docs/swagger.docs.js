@@ -23,9 +23,9 @@ const swaggerDefinition = {
     ],
 }
 
-const options = {
+const spec = {
     swaggerDefinition,
     apis: ['./src/routes/*.js'],
 }
 
-export const swaggerSpec = swaggerJSDoc(options)
+export const swaggerSpec = swaggerJSDoc(spec)

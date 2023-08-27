@@ -39,11 +39,7 @@ export const createEmployee = async (req, res) => {
             EmployeeID: createEmployeeQuery.EmployeeID
         })
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
-        } else {
-            res.status(500).json({ message: "Internal Server Error", error: error.message })
-        }
+        res.status(500).json({ message: "Internal Server Error", error: error.message })
     }
 }
 export const deleteEmployee = async (req, res) => {
