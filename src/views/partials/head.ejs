@@ -45,13 +45,53 @@
         transition: 0.3s;
     }
 
+
     .jumbotron pre {
         background: #f4f4f4;
-        width: fit-content;
         border: 1px solid #ddd;
-        border-left: 3px solid #3396f3;
+        border-left: 3px solid #f36d33;
         color: #666;
+        page-break-inside: avoid;
         font-family: monospace;
+        font-size: 15px;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1em 1.5em;
         display: block;
+        word-wrap: break-word;
+    }
+
+    @media screen and (min-width: 400px) and (max-width: 600px) {
+        .jumbotron pre {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: monospace;
+            font-size: 0.8em;
+            line-height: 1.6;
+            max-width: 100%;
+            overflow: auto;
+            display: block;
+        }
+    }
+
+    @media screen and (min-width: 300px) and (max-width: 400px) {
+        .jumbotron pre {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-left: 3px solid #f36d33;
+            color: #666;
+            page-break-inside: avoid;
+            font-family: monospace;
+            font-size: 0.6em;
+            line-height: 1.6;
+            max-width: 100%;
+            overflow: auto;
+            display: block;
+        }
     }
 </style>
