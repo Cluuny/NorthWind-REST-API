@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <%- include('../partials/head'); %>
-</head>
+    <head>
+        <%- include('../partials/head'); %>
+    </head>
 
-<body class="container">
+    <body class="container">
 
-    <header>
-        <%- include('../partials/header'); %>
-    </header>
+        <header>
+            <%- include('../partials/header'); %>
+        </header>
 
-    <main>
-        <div class="jumbotron">
-            <h1>The Northwind API</h1>
-            <p>This api was created with the objective of providing an accessible path to the Northwind Database.</p>
-            <button type="" class="">
-                <a href="https://en.wikiversity.org/wiki/Database_Examples/Northwind" target="_blank">Visit the
-                    Northwind
-                    Database</a>
-            </button>
-        </div>
-        <div class="jumbotron">
-            <h1>Getting Started</h1>
-            <p>To get started with the API you can make a GET request to <a href="/api">/api</a></p>
-            <p>Your response will be a JSON like this:</p>
-            <pre>
-                <code>
+        <main>
+            <div class="jumbotron">
+                <h1>The Northwind API</h1>
+                <p>This api was created with the objective of providing an
+                    accessible path to the Northwind Database.</p>
+                <button type class>
+                    <a
+                        href="https://en.wikiversity.org/wiki/Database_Examples/Northwind"
+                        target="_blank">Visit the
+                        Northwind
+                        Database</a>
+                </button>
+            </div>
+            <div class="jumbotron">
+                <h1>Getting Started</h1>
+                <p>To get started with the API you can make a GET request to <a
+                        href="/api">/api</a></p>
+                <p>Your response will be a JSON like this:</p>
+                <pre>
+<code>
 {
 message: "Welcome to the API",
     endpoints: {
@@ -39,19 +43,21 @@ message: "Welcome to the API",
         suppliers: "/api/suppliers"
     }
 }
-                </code>
-            </pre>
-            <hr>
-            <p>We strongly recommend to visit <a href="/docs" target="_blank">our documentation</a> in order to be aware
-                of the endpoints to be queried and
-                the parameters required in the queries ;)</p>
-        </div>
-    </main>
+</code>
+</pre>
+                <hr>
+                <p>We strongly recommend to visit <a href="/docs"
+                        target="_blank">our documentation</a> in order to be
+                    aware
+                    of the endpoints to be queried and
+                    the parameters required in the queries ;)</p>
+            </div>
+        </main>
 
-    <footer>
-        <%- include('../partials/footer'); %>
-    </footer>
+        <footer>
+            <%- include('../partials/footer'); %>
+        </footer>
 
-</body>
+    </body>
 
 </html>
