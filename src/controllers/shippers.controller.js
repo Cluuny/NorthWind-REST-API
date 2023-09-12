@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export const getShippers = async (req, res) => {
     try {
@@ -7,7 +7,7 @@ export const getShippers = async (req, res) => {
             getShippersQuery = await prisma.shippers.findMany()
         } else {
             const { id } = req.query
-            getShippersQuery = await prisma.shippers.findUnique({
+            getShippersQuery = await prisma.shippers.findUniqueOrThrow({
                 where: {
                     ShipperID: parseInt(id)
                 }
@@ -15,8 +15,14 @@ export const getShippers = async (req, res) => {
         }
         res.status(200).json(getShippersQuery)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Shippers with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
@@ -35,7 +41,17 @@ export const createShipper = async (req, res) => {
             ShipperID: createShipperQuery.ShipperID
         })
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2002":
+                    res.status(404).json({ message: `Already exists a Shipper with the provided data`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteShipper = async (req, res) => {
@@ -66,8 +82,14 @@ export const updateShipper = async (req, res) => {
         })
         res.sendStatus(204)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Shippers with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }

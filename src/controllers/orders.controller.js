@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client"
+import { Prisma, PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export const getOrders = async (req, res) => {
     try {
         const { id } = req.query
-        const OrdersQuery = await prisma.orders.findMany({
+        const OrdersQuery = await prisma.orders.findUniqueOrThrow({
             where: { OrderID: parseInt(id) },
             select: {
                 OrderID: true,
@@ -21,8 +21,14 @@ export const getOrders = async (req, res) => {
         })
         res.status(200).json(OrdersQuery)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Orders with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
@@ -52,7 +58,17 @@ export const createOrder = async (req, res) => {
             OrderID: createOrderQuery.OrderID
         })
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2002":
+                    res.status(404).json({ message: `Already exists a Order with the provided data`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteOrder = async (req, res) => {
@@ -70,6 +86,16 @@ export const deleteOrder = async (req, res) => {
         })
         return res.sendStatus(204)
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Orders with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }

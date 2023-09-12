@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client"
+import { Prisma, PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 export const getCustomers = async (req, res) => {
     try {
@@ -7,14 +7,20 @@ export const getCustomers = async (req, res) => {
             getCustomersQuery = await prisma.customers.findMany()
         } else {
             const { id } = req.query
-            getCustomersQuery = await prisma.customers.findUnique({
+            getCustomersQuery = await prisma.customers.findUniqueOrThrow({
                 where: { CustomerID: parseInt(id) }
             })
         }
         res.status(200).json(getCustomersQuery)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Customer with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
@@ -38,7 +44,17 @@ export const createCustomer = async (req, res) => {
             CustomerID: createCustomerQuery.CustomerID
         })
     } catch (error) {
-        res.status(500).json({ message: "Internal Server Error", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2002":
+                    res.status(404).json({ message: `Already exists a Customer with the provided data`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
+        } else {
+            res.status(500).json({ message: "Internal Server Error", error: error.message })
+        }
     }
 }
 export const deleteCustomer = async (req, res) => {
@@ -69,8 +85,14 @@ export const updateCustomer = async (req, res) => {
         })
         res.sendStatus(204)
     } catch (error) {
-        if (error instanceof TypeError) {
-            res.status(404).json({ message: "Not Found", error: error.message })
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case "P2025":
+                    res.status(404).json({ message: `Theres no Customer with the provided ID`, error: error.name })
+                    break;
+                default:
+                    res.status(500).json({ message: "Internal Server Error", error: error.message })
+            }
         } else {
             res.status(500).json({ message: "Internal Server Error", error: error.message })
         }
